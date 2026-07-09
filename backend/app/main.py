@@ -46,6 +46,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Print allowed origins at startup so deployment logs show what was picked up
+print("CORS allowed_origins:", allow_origins)
+
 from app.api import auth, hcp, interactions, chat, tools
 
 
