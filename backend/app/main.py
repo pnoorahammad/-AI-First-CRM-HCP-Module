@@ -23,15 +23,24 @@ app = FastAPI(
 )
 
 # CORS configuration
-origins = [
-    settings.FRONTEND_URL,
-    "http://localhost:5173",
-    "http://localhost:3000",
-]
+# Support a comma-separated FRONTEND_URL and fall back to common dev origins.
+origins = []
+if settings.FRONTEND_URL:
+    if "," in settings.FRONTEND_URL:
+        origins = [o.strip() for o in settings.FRONTEND_URL.split(",") if o.strip()]
+    else:
+        origins = [settings.FRONTEND_URL]
+
+# Always allow common local dev hosts in addition to configured origin(s)
+for host in ("http://localhost:5173", "http://localhost:3000"):
+    if host not in origins:
+        origins.append(host)
+
+allow_origins = ["*"] if "*" in origins else origins
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

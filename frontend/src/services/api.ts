@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// Normalize configured API URL so it always includes the `/api` prefix.
+let rawBase = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+if (rawBase.endsWith('/')) rawBase = rawBase.slice(0, -1);
+const API_URL = rawBase.endsWith('/api') ? rawBase : `${rawBase}/api`;
 
 export const api = axios.create({
   baseURL: API_URL,
