@@ -1,4 +1,4 @@
-﻿-- ============================================================
+-- ============================================================
 -- AI-First CRM HCP Module -- Full Database Schema
 -- Run this in: Supabase Dashboard -> SQL Editor -> New Query
 -- ============================================================
@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_users_email ON users (email);
 CREATE INDEX        IF NOT EXISTS ix_users_id    ON users (id);
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
 
 -- 2. AI LOGS
 CREATE TABLE IF NOT EXISTS ai_logs (
@@ -33,6 +34,7 @@ CREATE TABLE IF NOT EXISTS ai_logs (
 CREATE INDEX IF NOT EXISTS ix_ai_logs_id         ON ai_logs (id);
 CREATE INDEX IF NOT EXISTS ix_ai_logs_session_id ON ai_logs (session_id);
 CREATE INDEX IF NOT EXISTS ix_ai_logs_user_id    ON ai_logs (user_id);
+ALTER TABLE ai_logs DISABLE ROW LEVEL SECURITY;
 
 -- 3. HCPS (Healthcare Professionals)
 CREATE TABLE IF NOT EXISTS hcps (
@@ -54,6 +56,7 @@ CREATE INDEX IF NOT EXISTS ix_hcps_id           ON hcps (id);
 CREATE INDEX IF NOT EXISTS ix_hcps_location     ON hcps (location);
 CREATE INDEX IF NOT EXISTS ix_hcps_name         ON hcps (name);
 CREATE INDEX IF NOT EXISTS ix_hcps_speciality   ON hcps (speciality);
+ALTER TABLE hcps DISABLE ROW LEVEL SECURITY;
 
 -- 4. INTERACTIONS
 CREATE TABLE IF NOT EXISTS interactions (
@@ -76,6 +79,7 @@ CREATE INDEX IF NOT EXISTS ix_interactions_date    ON interactions (date);
 CREATE INDEX IF NOT EXISTS ix_interactions_hcp_id  ON interactions (hcp_id);
 CREATE INDEX IF NOT EXISTS ix_interactions_id      ON interactions (id);
 CREATE INDEX IF NOT EXISTS ix_interactions_user_id ON interactions (user_id);
+ALTER TABLE interactions DISABLE ROW LEVEL SECURITY;
 
 -- 5. FOLLOW-UPS
 CREATE TABLE IF NOT EXISTS followups (
@@ -98,6 +102,7 @@ CREATE INDEX IF NOT EXISTS ix_followups_hcp_id         ON followups (hcp_id);
 CREATE INDEX IF NOT EXISTS ix_followups_id             ON followups (id);
 CREATE INDEX IF NOT EXISTS ix_followups_interaction_id ON followups (interaction_id);
 CREATE INDEX IF NOT EXISTS ix_followups_user_id        ON followups (user_id);
+ALTER TABLE followups DISABLE ROW LEVEL SECURITY;
 
 -- 6. INTERACTION HISTORY (Audit Trail)
 CREATE TABLE IF NOT EXISTS interaction_history (
@@ -111,6 +116,7 @@ CREATE TABLE IF NOT EXISTS interaction_history (
 );
 CREATE INDEX IF NOT EXISTS ix_interaction_history_id             ON interaction_history (id);
 CREATE INDEX IF NOT EXISTS ix_interaction_history_interaction_id ON interaction_history (interaction_id);
+ALTER TABLE interaction_history DISABLE ROW LEVEL SECURITY;
 
 -- Alembic version tracking
 CREATE TABLE IF NOT EXISTS alembic_version (
@@ -120,5 +126,11 @@ CREATE TABLE IF NOT EXISTS alembic_version (
 INSERT INTO alembic_version (version_num)
 VALUES ('413e52c9ced1')
 ON CONFLICT DO NOTHING;
+
+-- Grant full access to postgres and service_role
+GRANT ALL ON ALL TABLES IN SCHEMA public TO postgres;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO postgres;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO service_role;
 
 SELECT 'Schema created successfully' AS status;
