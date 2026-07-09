@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.env
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.pytest_cache/
+*.log
+crm_local.db
+crm.db
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+.vite/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+fix_mui.py
+fix_braces.py
+fix_unused.py
+revert_mui.py
+fix_mypy.py
+mypy_output.txt
